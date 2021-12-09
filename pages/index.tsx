@@ -3,7 +3,12 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 
-const Home: NextPage = () => {
+interface Props {
+  userAgent?: string;
+  asPath?:string;
+}
+
+const Home: NextPage<Props> = ({ userAgent, asPath }) => {
   return (
     <div className={styles.container}>
       <Head>
@@ -12,6 +17,9 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
+      <div>
+        Your browser is: {userAgent} and the url is: {asPath}
+      </div>
       <main className={styles.main}>
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
@@ -37,6 +45,11 @@ const Home: NextPage = () => {
       </footer>
     </div>
   )
+}
+
+Home.getInitialProps = async ({ req, asPath }) => {
+  const userAgent = req ? req.headers['user-agent'] : navigator.userAgent
+  return { userAgent, asPath }
 }
 
 export default Home
